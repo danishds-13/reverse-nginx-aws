@@ -1,0 +1,30 @@
+name: Deploy Reverse NGINX Stack
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /opt/reverse-nginx || exit 1
+            if [ ! -d ".git" ]; then
+              git clone https://github.com/danishds-13/reverse-nginx-aws.git .
+            else
+              git pull origin main
+            fi
+            docker-compose down
+            docker-compose up -d --build
