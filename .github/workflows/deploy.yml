@@ -23,14 +23,14 @@ jobs:
           script: |
             set -e
 
-            if [ ! -d /opt/reverse-nginx/.git ]; then
-              rm -rf /opt/reverse-nginx
-              git clone https://github.com/danishds-13/reverse-nginx-aws.git /opt/reverse-nginx
-            fi
+            sudo rm -rf /opt/reverse-nginx
+
+            sudo git clone https://github.com/danishds-13/reverse-nginx-aws.git /opt/reverse-nginx
 
             cd /opt/reverse-nginx
-            git pull origin main
-            docker-compose down
-            docker-compose up -d --build
+
+            sudo docker-compose down || true
+            sudo docker-compose up -d --build
+
 
 
