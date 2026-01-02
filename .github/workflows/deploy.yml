@@ -22,8 +22,15 @@ jobs:
           port: 22
           script: |
             set -e
+
+            if [ ! -d /opt/reverse-nginx/.git ]; then
+              rm -rf /opt/reverse-nginx
+              git clone https://github.com/danishds-13/reverse-nginx-aws.git /opt/reverse-nginx
+            fi
+
             cd /opt/reverse-nginx
             git pull origin main
             docker-compose down
             docker-compose up -d --build
+
 
